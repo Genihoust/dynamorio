@@ -34,27 +34,43 @@
 #include "../analysis_tool.h"
 #include "../common/options.h"
 #include "../common/utils.h"
-#include "cache_simulator.h"
+#include "cache_simulator_create.h"
 #include "tlb_simulator.h"
-/* XXX: we include these here for now but it's undecided whether they
+/* XXX i#2006: we include these here for now but it's undecided whether they
  * should be separated and this should only include
  * cache-simulation-based tools.
  */
-#include "../tools/histogram.h"
-#include "../tools/reuse_distance.h"
+#include "../tools/histogram_create.h"
+#include "../tools/reuse_distance_create.h"
 
 analysis_tool_t *
 drmemtrace_analysis_tool_create()
 {
-    if (op_simulator_type.get_value() == CPU_CACHE)
-        return new cache_simulator_t;
-    else if (op_simulator_type.get_value() == TLB)
+    if (op_simulator_type.get_value() == CPU_CACHE) {
+        return cache_simulator_create(op_num_cores.get_value(),
+                                      op_line_size.get_value(),
+                                      op_L1I_size.get_value(),
+                                      op_L1D_size.get_value(),
+                                      op_L1I_assoc.get_value(),
+                                      op_L1D_assoc.get_value(),
+                                      op_LL_size.get_value(),
+                                      op_LL_assoc.get_value(),
+                                      op_replace_policy.get_value());
+    } else if (op_simulator_type.get_value() == TLB) {
         return new tlb_simulator_t;
-    else if (op_simulator_type.get_value() == HISTOGRAM)
-        return new histogram_t;
-    else if (op_simulator_type.get_value() == REUSE_DIST)
-        return new reuse_distance_t;
-    else {
+    } else if (op_simulator_type.get_value() == HISTOGRAM) {
+        return histogram_tool_create(op_line_size.get_value(),
+                                     op_report_top.get_value(),
+                                     op_verbose.get_value());
+    } else if (op_simulator_type.get_value() == REUSE_DIST) {
+        return reuse_distance_tool_create(op_line_size.get_value(),
+                                          op_reuse_distance_histogram.get_value(),
+                                          op_reuse_distance_threshold.get_value(),
+                                          op_report_top.get_value(),
+                                          op_reuse_skip_dist.get_value(),
+                                          op_reuse_verify_skip.get_value(),
+                                          op_verbose.get_value());
+    } else {
         ERRMSG("Usage error: unsupported analyzer type. "
                "Please choose " CPU_CACHE ", " TLB ", "
                HISTOGRAM ", or " REUSE_DIST ".\n");

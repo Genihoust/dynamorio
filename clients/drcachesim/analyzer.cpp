@@ -115,7 +115,9 @@ bool
 analyzer_t::print_stats()
 {
     bool res = true;
-    for (int i = 0; i < num_tools; ++i)
+    for (int i = 0; i < num_tools; ++i) {
+        //NOCHECKIN: separate, ask for name?
         res = tools[i]->print_results() && res;
+    }
     return res;
 }

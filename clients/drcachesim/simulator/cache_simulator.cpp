@@ -1,5 +1,5 @@
 /* **********************************************************
- * Copyright (c) 2015-2016 Google, Inc.  All rights reserved.
+ * Copyright (c) 2015-2017 Google, Inc.  All rights reserved.
  * **********************************************************/
 
 /*
@@ -48,8 +48,47 @@
 #include "cache_simulator.h"
 #include "droption.h"
 
-cache_simulator_t::cache_simulator_t()
+analysis_tool_t *
+cache_simulator_create(unsigned int num_cores,
+                       unsigned int line_size,
+                       size_t L1I_size,
+                       size_t L1D_size,
+                       unsigned int L1I_assoc,
+                       unsigned int L1D_assoc,
+                       size_t LL_size,
+                       unsigned int LL_assoc,
+                       std::string replace_policy)
 {
+    return new cache_simulator_t(num_cores, line_size, L1I_size, L1D_size,
+                                 L1I_assoc, L1D_assoc, LL_size, LL_assoc, replace_policy);
+}
+
+cache_simulator_t::cache_simulator_t(unsigned int num_cores_,
+                                     unsigned int line_size,
+                                     size_t L1I_size,
+                                     size_t L1D_size,
+                                     unsigned int L1I_assoc,
+                                     unsigned int L1D_assoc,
+                                     size_t LL_size,
+                                     unsigned int LL_assoc,
+                                     std::string replace_policy)
+{
+    // To support generalization and embedding the simulator in other front-ends,
+    // we take in the main options as parameters.
+    // To avoid too much code refactoring we simply set the options here.
+    op_num_cores.set_value(num_cores_);
+    op_line_size.set_value(line_size);
+    op_L1I_size.set_value(L1I_size);
+    op_L1D_size.set_value(L1D_size);
+    op_L1I_assoc.set_value(L1I_assoc);
+    op_L1D_assoc.set_value(L1D_assoc);
+    op_LL_size.set_value(LL_size);
+    op_LL_assoc.set_value(LL_assoc);
+    op_replace_policy.set_value(replace_policy);
+
+    // XXX i#2006: if we add any options as params that are set in
+    // simulator_t::simulator_t we'll need to adjust the parent constructor.
+
     // XXX i#1703: get defaults from hardware being run on.
 
     num_cores = op_num_cores.get_value();

@@ -95,9 +95,10 @@ use_DynamoRIO_extension(drcachesim droption)
 use_DynamoRIO_extension(drcachesim drcovlib_static)
 use_DynamoRIO_extension(drcachesim drutil_static)
 
-# This is to avoid common/ in analysis_tool.h's include of memref.h, to make
-# it easier for installation of needed tool headers into a single dir.
-include_directories(common)
+# This is to avoid ../ and common/ in the #includes of headers that we
+# may want to install into a single dir for 3rd-party tool integration.
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/common)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(file_analyzer_tool_srcs
   analyzer.cpp

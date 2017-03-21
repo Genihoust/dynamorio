@@ -1,5 +1,5 @@
 /* **********************************************************
- * Copyright (c) 2016-2017 Google, Inc.  All rights reserved.
+ * Copyright (c) 2017 Google, Inc.  All rights reserved.
  * **********************************************************/
 
 /*
@@ -30,36 +30,24 @@
  * DAMAGE.
  */
 
-/* histogram: a memory trace histogram analysis tool.
- */
+/* cache simulator creation */
 
-#ifndef _HISTOGRAM_H_
-#define _HISTOGRAM_H_ 1
+#ifndef _CACHE_SIMULATOR_CREATE_H_
+#define _CACHE_SIMULATOR_CREATE_H_ 1
 
-#include <map>
 #include <string>
-#include "../analysis_tool.h"
-#include "../common/memref.h"
+#include "analysis_tool.h"
 
-class histogram_t : public analysis_tool_t
-{
- public:
-    histogram_t(unsigned int line_size,
-                unsigned int report_top,
-                unsigned int verbose);
-    virtual ~histogram_t();
-    virtual bool process_memref(const memref_t &memref);
-    virtual bool print_results();
+// These options are currently documented in ../common/options.cpp.
+analysis_tool_t *
+cache_simulator_create(unsigned int num_cores = 4,
+                       unsigned int line_size = 64,
+                       size_t L1I_size = 32*1024U,
+                       size_t L1D_size = 32*1024U,
+                       unsigned int L1I_assoc = 8,
+                       unsigned int L1D_assoc = 8,
+                       size_t LL_size = 8*1024*1024,
+                       unsigned int LL_assoc = 16,
+                       std::string replace_policy = "LRU");
 
- protected:
-    /* FIXME i#2020: use unsorted_map (C++11) for faster lookup */
-    std::map<addr_t, uint64_t> icache_map;
-    std::map<addr_t, uint64_t> dcache_map;
-
-    unsigned int op_line_size;
-    unsigned int op_report_top; /* most accessed lines */
-    size_t line_size_bits;
-    static const std::string TOOL_NAME;
-};
-
-#endif /* _HISTOGRAM_H_ */
+#endif /* _CACHE_SIMULATOR_CREATE_H_ */

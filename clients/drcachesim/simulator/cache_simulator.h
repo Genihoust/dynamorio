@@ -1,5 +1,5 @@
 /* **********************************************************
- * Copyright (c) 2015-2016 Google, Inc.  All rights reserved.
+ * Copyright (c) 2015-2017 Google, Inc.  All rights reserved.
  * **********************************************************/
 
 /*
@@ -44,7 +44,15 @@
 class cache_simulator_t : public simulator_t
 {
  public:
-    cache_simulator_t();
+    cache_simulator_t(unsigned int num_cores,
+                      unsigned int line_size,
+                      size_t L1I_size,
+                      size_t L1D_size,
+                      unsigned int L1I_assoc,
+                      unsigned int L1D_assoc,
+                      size_t LL_size,
+                      unsigned int LL_assoc,
+                      std::string replace_policy);
     virtual ~cache_simulator_t();
     virtual bool process_memref(const memref_t &memref);
     virtual bool print_results();

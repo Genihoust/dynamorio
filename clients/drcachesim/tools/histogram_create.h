@@ -1,5 +1,5 @@
 /* **********************************************************
- * Copyright (c) 2016-2017 Google, Inc.  All rights reserved.
+ * Copyright (c) 2017 Google, Inc.  All rights reserved.
  * **********************************************************/
 
 /*
@@ -30,36 +30,17 @@
  * DAMAGE.
  */
 
-/* histogram: a memory trace histogram analysis tool.
- */
+/* histogram tool creation */
 
-#ifndef _HISTOGRAM_H_
-#define _HISTOGRAM_H_ 1
+#ifndef _HISTOGRAM_CREATE_H_
+#define _HISTOGRAM_CREATE_H_ 1
 
-#include <map>
-#include <string>
-#include "../analysis_tool.h"
-#include "../common/memref.h"
+#include "analysis_tool.h"
 
-class histogram_t : public analysis_tool_t
-{
- public:
-    histogram_t(unsigned int line_size,
-                unsigned int report_top,
-                unsigned int verbose);
-    virtual ~histogram_t();
-    virtual bool process_memref(const memref_t &memref);
-    virtual bool print_results();
+// These options are currently documented in ../common/options.cpp.
+analysis_tool_t *
+histogram_tool_create(unsigned int line_size = 64,
+                      unsigned int report_top = 10,
+                      unsigned int verbose = 0);
 
- protected:
-    /* FIXME i#2020: use unsorted_map (C++11) for faster lookup */
-    std::map<addr_t, uint64_t> icache_map;
-    std::map<addr_t, uint64_t> dcache_map;
-
-    unsigned int op_line_size;
-    unsigned int op_report_top; /* most accessed lines */
-    size_t line_size_bits;
-    static const std::string TOOL_NAME;
-};
-
-#endif /* _HISTOGRAM_H_ */
+#endif /* _HISTOGRAM_CREATE_H_ */

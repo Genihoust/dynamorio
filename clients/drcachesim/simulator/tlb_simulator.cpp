@@ -1,5 +1,5 @@
 /* **********************************************************
- * Copyright (c) 2015-2016 Google, Inc.  All rights reserved.
+ * Copyright (c) 2015-2017 Google, Inc.  All rights reserved.
  * **********************************************************/
 
 /*
@@ -44,6 +44,7 @@
 #include "tlb.h"
 #include "tlb_simulator.h"
 
+//NOCHECKIN library-ize also
 tlb_simulator_t::tlb_simulator_t()
 {
     num_cores = op_num_cores.get_value();
